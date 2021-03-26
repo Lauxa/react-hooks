@@ -27,8 +27,8 @@ function FavoriteAnimal({animal, onAnimalChange}) {
 }
 
 // 🐨 uncomment this
-function Display({name, animal}) {
-  return <div>{`Hey ${name}, your favorite animal is: ${animal}!`}</div>
+function Display({animal}) {
+  return <div>{`Your favorite animal is: ${animal}!`}</div>
 }
 
 function App() {
@@ -41,7 +41,7 @@ function App() {
       {/* 🐨 pass the animal and onAnimalChange prop here (similar to the Name component above) */}
       <FavoriteAnimal animal={animal} onAnimalChange={event => setAnimal(event.target.value)} />
       {/* 🐨 pass the animal prop here */}
-      <Display name={name} animal={animal} />
+      <Display animal={animal} />
     </form>
   )
 }
