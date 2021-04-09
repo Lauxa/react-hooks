@@ -21,6 +21,7 @@ function PokemonInfo({pokemonName}) {
     if (!pokemonName) return
 
     setPokemon(null)
+    setError(null)
 
     fetchPokemon(pokemonName)
       .then(pokemonData => setPokemon(pokemonData))
