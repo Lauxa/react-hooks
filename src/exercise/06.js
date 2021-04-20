@@ -1,11 +1,7 @@
 // useEffect: HTTP requests
 // http://localhost:3000/isolated/exercise/06.js
-
 import * as React from 'react'
-// 🐨 you'll want the following additional things from '../pokemon':
-// fetchPokemon: the function we call to get the pokemon info
-// PokemonInfoFallback: the thing we show while we're loading the pokemon info
-// PokemonDataView: the stuff we use to display the pokemon info
+import {ErrorBoundary} from 'react-error-boundary'
 import {
   PokemonForm,
   fetchPokemon,
@@ -13,27 +9,14 @@ import {
   PokemonDataView,
 } from '../pokemon'
 
-class ErrorBoundary extends React.Component {
-  state = {error: null}
-
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return {error: error}
-  }
-
-  render() {
-    if (this.state.error) {
-      // You can render any custom fallback UI
-      return (
-        <div role="alert">
-          There was an error:
-          <pre style={{whiteSpace: 'normal'}}>{this.state.error.message}</pre>
-        </div>
-      )
-    }
-
-    return this.props.children
-  }
+function FallbackComponent({error, resetErrorBoundary}) {
+  return (
+    <div role="alert">
+      There was an error:
+      <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
+      <button onClick={resetErrorBoundary}>Try again</button>
+    </div>
+  )
 }
 
 function PokemonInfo({pokemonName}) {
@@ -60,7 +43,7 @@ function PokemonInfo({pokemonName}) {
   if (state.status === 'rejected') throw state.error
 
   if (state.status === 'idle') {
-    return state.pokemon
+    return 'Submit a pokemon'
   }
 
   if (state.status === 'pending')
@@ -82,7 +65,11 @@ function App() {
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
       <hr />
       <div className="pokemon-info">
-        <ErrorBoundary key={pokemonName}>
+        <ErrorBoundary
+          FallbackComponent={FallbackComponent}
+          resetKeys={[pokemonName]}
+          onReset={() => setPokemonName('')}
+        >
           <PokemonInfo pokemonName={pokemonName} />
         </ErrorBoundary>
       </div>
